@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block body %}
+<form class="form-inline" id="filter">
+  <div class="my-0 mx-5" style="width:100%;">
+    <input type="text" id="firstname" placeholder="First name" name="firstname">
+    <input type="text" id="lastname" placeholder="Last name" name="lastname">
+    <input type="text" id="role" placeholder="Current position" name="role">
+    <input type="text" id="title" placeholder="Article title" name="title">
+    <input type="text" id="source" placeholder="Source" name="source">
+    <input placeholder="Published since" name="publish_date" type="text" onfocus="(this.type='date')" id="publish_date">
+    <button type="submit">Apply filters</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="gfm-form" enctype="multipart/form-data">
+    <h1 id="companyName">{{ company_name|upper }}</h1>
+    <br>
+    {% csrf_token %}
+    {% if contacts %}
+      <h3>Contacts</h3>
+      <table id="contacts" class="gfm-editable-table">
+        <thead>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Email address</th>
+          <th>Telephone</th>
+          <th>Role</th>
+          <th>Date started</th>
+          <th></th>
+          <th></th>
+        </thead>
+        {% for contact in contacts %}
+        <tr id="{{ contact.person.pk }}">
+          <td name="firstname">
+            {{ contact.person.firstname }}
+          </td>
+          <td name="lastname">
+            {{ contact.person.lastname }}
+          </td>
+          <td name="email_address">
+            {% for value in contact.person.email_address %}
+              {% if value != '—' %}
+                <a href="mailto:{{ value }}" target="_blank">{{ value }}</a>
+              {% else %}
+                {{ value }}
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td name="phone_number">
+            {% for value in contact.person.phone_number %}
+              {{ value }}<br>
+            {% endfor %}
+          </td>
+          <td name="role">
+            {{ contact.role }}
+          </td>
+          <td name="date_started">
+            {{ contact.date_started|date:"M Y" }}
+          </td>
+          <td>
+            <button onmouseover="highlight(this, false);" onmouseout="unhighlight(this);" type="button" onclick="validateEmail(this.parentNode.parentNode);">Validate</button>
+          </td>
+          <td>
+            <button onmouseover="highlight(this, false);" onmouseout="unhighlight(this);" type="button" onclick="document.getElementById('contacts').deleteRow(this.parentNode.parentNode.rowIndex);">Remove</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+    {% if articles %}
+      <h3>News</h3>
+      <table id="articles" class="gfm-editable-table">
+        <thead>
+          <th></th>
+          <th></th>
+          <th></th>
+        </thead>
+        {% for article in articles %}
+          <tr></tr>
+          <tr>
+            <td>
+              {% if article.has_url %}
+                <a href="{{ article.url }}" target="_blank">{{ article.title }} ({{ article.source_name }}, {{ article.publish_date }})</a>
+              {% else %}
+                {{ article.title }} ({{ article.source_name }}, {{ article.publish_date }})
+              {% endif %}
+            </td>
+            <td rowspan="2">
+              <button onmouseover="highlight(this, true);" onmouseout="unhighlight(this);" type="button" onclick="removeArticle(this, true);">Remove</button>
+            </td>
+          </tr>
+          <tr><td>{{ article.content|truncatechars:100 }}</td></tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    <input id="sourceField" type="hidden" name="sourceField">
+    <button type="submit" onclick="getPageSource();" id="save-report" name="save-report">Save report</button>
+  </form>
+
+  <script type="text/javascript">
+    window.onload = () => {
+      var url = new URL(window.location.href);
+
+      var firstname = url.searchParams.get("firstname");
+      var lastname = url.searchParams.get("lastname");
+      var role = url.searchParams.get("role");
+
+      document.getElementById('firstname').value = firstname;
+      document.getElementById('lastname').value = lastname;
+      document.getElementById('role').value = role;
+
+      var title = url.searchParams.get("title");
+      var source = url.searchParams.get("source");
+      var publish_date = url.searchParams.get("publish_date");
+
+      document.getElementById('title').value = title;
+      document.getElementById('source').value = source;
+      document.getElementById('publish_date').value = publish_date;
+    }
+
+    function highlight(elem, double=false) {
+      elem.parentNode.parentNode.style.backgroundColor='#FFF9F5';
+      elem.parentNode.style.borderTopRightRadius='8px';
+      elem.parentNode.style.borderBottomRightRadius='8px';
+
+      if (double) {
+        elem.parentNode.parentNode.parentNode.rows[elem.parentNode.parentNode.rowIndex-1].cells[elem.parentNode.cellIndex-1].style.borderTopLeftRadius='8px';
+        elem.parentNode.parentNode.parentNode.rows[elem.parentNode.parentNode.rowIndex].cells[elem.parentNode.cellIndex-1].style.borderBottomLeftRadius='8px';
+        elem.parentNode.parentNode.parentNode.rows[elem.parentNode.parentNode.rowIndex].style.backgroundColor='#FFF9F5';
+      } else {
+        elem.parentNode.parentNode.parentNode.rows[elem.parentNode.parentNode.rowIndex-1].cells[0].style.borderTopLeftRadius='8px';
+        elem.parentNode.parentNode.parentNode.rows[elem.parentNode.parentNode.rowIndex-1].cells[0].style.borderBottomLeftRadius='8px';
+      }
+    }
+
+    function unhighlight(elem) {
+      elem.parentNode.parentNode.style.backgroundColor='transparent';
+      elem.parentNode.parentNode.parentNode.rows[elem.parentNode.parentNode.rowIndex].style.backgroundColor='transparent';
+    }
+
+    function removeArticle(row, double=false) {
+      if (double) {
+        document.getElementById('articles').deleteRow(row.parentNode.parentNode.rowIndex+1);
+      }
+      document.getElementById('articles').deleteRow(row.parentNode.parentNode.rowIndex);
+    }
+
+    function getPageSource() {
+      document.getElementById('sourceField').value = document.documentElement.innerHTML;
+    }
+
+    function validateEmail(elem) {
+      var id = elem.id;
+
+      var firstname = elem.querySelector('[name=firstname]').textContent.trim();
+      var lastname = elem.querySelector('[name=lastname]').textContent.trim();
+      var company_name = document.getElementById('companyName').textContent.trim();
+      var email_address = elem.querySelector('[name=email_address]').textContent.trim();
+
+      if (email_address == '—') {
+        email_address = '';
+      }
+
+      $.ajax({
+        "url": "/data/validate_email/",
+        "method": "POST",
+        "headers": {
+          "X-CSRFToken": Cookies.get('csrftoken'),
+          "Content-Type": "application/json",
+        },
+        "data": JSON.stringify({
+          "details": [
+            {
+              "id": id,
+              "first_name": firstname,
+              "last_name": lastname,
+              "organization_name": company_name,
+              "email_address": email_address,
+            }
+          ]
+        }),
+        "success": function(result) {
+          $("#notifications").append(`
+            <div class="toast fade show bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <small>{{ now }}</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body text-white">
+                Email address added using API.
+              </div>
+            </div>`
+          );
+          var match = result[elem.id]['email']
+          var status = result[elem.id]['status']
+
+          elem.querySelector('[name=email_address]').textContent = match;
+
+          if (status == 'extrapolated') {
+            elem.querySelector('[name=email_address]').style.color = 'red';
+          }
+
+        },
+        "error": function(result) {
+          console.log(result);
+          $("#notifications").append(`
+            <div class="toast fade show bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <small>{{ now }}</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body text-white">`
+                + result.responseJSON['ERROR'] +
+              `</div>
+            </div>`
+          );
+        }
+      });
+    }
+  </script>
+{% endblock %}

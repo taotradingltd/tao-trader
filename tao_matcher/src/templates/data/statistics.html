@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- <h1 style="padding-top:17%; text-align: center; font-size: 10vw;">GFM Vision</h1> -->
+
+<div class="align-middle text-center" id="statistics-div">
+
+  <h3>We have the following number of entries:</h3>
+
+  <div id="table" class="container my-0 mx-5">
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col-5">
+        <table class="table">
+          <thead>
+            <th scope="col">Statistic</th>
+            <th scope="col">Number of entries</th>
+          </thead>
+          <tbody>
+            {% for key, value in table_stats.items %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+      </div>
+      </div>
+  </div>
+
+  <h3>Some data on moves we are tracking:</h3>
+
+  <div id="table" class="container my-0 mx-5">
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col-5">
+        <table class="table">
+          <thead>
+            <th scope="col">Type</th>
+            <th scope="col">Number</th>
+          </thead>
+          <tbody>
+            {% for key, value in move_stats.items %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+      </div>
+      </div>
+  </div>
+
+  <h3>State information:</h3>
+  <div id="table" class="container my-0 mx-5">
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col-5">
+        <table class="table">
+          <thead>
+            <th scope="col">Task</th>
+            <th scope="col">Running</th>
+          </thead>
+          <tbody>
+            {% for key, value in state_stats.items %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+      </div>
+      </div>
+  </div>
+
+</div>
+{% endblock %}

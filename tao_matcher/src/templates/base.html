@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="{% static 'style.css' %}"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>GFM Vision{% block title %}{% endblock %}</title>
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <header class="navbar navbar-dark navbar-expand-lg bg-dark sticky-top">
+  <nav class="container-xxl flex-wrap flex-lg-nowrap" aria-label="Navigation bar">
+    <ul class="navbar-nav flex-row flex-wrap">
+    <li class="nav-item disabled border-0 col-6 col-lg-auto">
+      <a class="nav-link d-none fs-6 pe-1">Disabled</a>
+    </li>
+    </ul>
+    <a class="navbar-brand text-white py-2 me-0 me-lg-2" href="/">
+    Vision
+    </a>
+    <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas-lg bg-dark offcanvas-end flex-grow-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarOffcanvasLabel" data-bs-scroll="true">
+    <div class="offcanvas-header px-4 pb-0">
+      <h5 class="offcanvas-title text-white" id="offcanvasNavbarOffcanvasLabel">GFM Vision</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#offcanvasNavbar"></button>
+    </div>
+    <div class="offcanvas-body p-4 pt-0 p-lg-0">
+      <hr class="d-lg-none text-white">
+      <ul class="navbar-nav mx-2 flex-row flex-wrap">
+      <li class="nav-item dropdown col-6 col-lg-auto">
+        <a class="nav-link text-white dropdown-toggle py-2 px-0 px-lg-2" href="/articles/" id="articlesDropdown"
+         role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Articles
+        </a>
+        <ul class="dropdown-menu" id="articlesDropdownElements" aria-labelledby="articlesDropdown">
+        <li><a class="dropdown-item text-black" href="/articles/">View articles</a></li>
+        <li><a class="dropdown-item text-black" href="/articles/create_article/">Create article</a></li>
+        {% if user.is_staff %}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-black" href="/articles/upload_file/">Upload</a></li>
+        {% endif %}
+        </ul>
+      </li>
+      <li class="nav-item dropdown col-6 col-lg-auto">
+        <a class="nav-link text-white dropdown-toggle py-2 px-0 px-lg-2" href="/data/people/" id="dataDropdown"
+         role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Data
+        </a>
+        <ul class="dropdown-menu" id="dataDropdownElements" aria-labelledby="dataDropdown">
+        <li><a class="dropdown-item text-black" href="/data/people/">People</a></li>
+        <li><a class="dropdown-item text-black" href="/data/companies/">Companies</a></li>
+        <li><a class="dropdown-item text-black" href="/data/recent_updates/">Recent moves</a></li>
+        <li><a class="dropdown-item text-black" href="/data/report_builder/">Reports</a></li>
+        {% if user.is_staff %}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-black" href="/data/upload/">Upload</a></li>
+        <li><a class="dropdown-item text-black" href="/data/statistics/">Statistics</a></li>
+        {% endif %}
+        </ul>
+      </li>
+      <li class="nav-item dropdown col-6 col-lg-auto">
+        <a class="nav-link text-white dropdown-toggle py-2 px-0 px-lg-2" href="/data_science/" id="datascienceDropdown"
+         role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Data science
+        </a>
+        <ul class="dropdown-menu" id="datascienceDropdownElements" aria-labelledby="datascienceDropdown">
+        <li><a class="dropdown-item text-black" href="/data_science/badges/">Badges</a></li>
+        <li><a class="dropdown-item text-black" href="/data_science/moves/">Moves report</a></li>
+        <li><a class="dropdown-item text-black" href="/data_science/newsletter/">Newsletter data</a></li>
+        <!-- <li><a class="dropdown-item text-black" href="/data_science/newsletter/">Campaign stats</a></li> -->
+        </ul>
+      </li>
+      </ul>
+      <hr class="d-lg-none text-white">
+      <hr class="d-lg-none text-white">
+      <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+      </ul>
+      <ul class="navbar-nav flex-row flex-wrap ms-md-0">
+      {% if user.is_staff %}
+      <li class="nav-item col-6 col-lg-auto">
+        <a class="nav-link text-white py-2 px-0 px-lg-2" href="/admin/" rel="noopener">Admin</a>
+      </li>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <li class="nav-item col-6 col-lg-auto">
+        <a class="nav-link text-white py-2 px-0 px-lg-2" href="/logout/" rel="noopener">Logout</a>
+      </li>
+      {% else %}
+      <li class="nav-item col-6 col-lg-auto">
+        <a class="nav-link text-white py-2 px-0 px-lg-2" href="/login/" rel="noopener">Login</a>
+      </li>
+      <li class="nav-item col-6 col-lg-auto">
+        <a class="nav-link text-white py-2 px-0 px-lg-2" href="/register/" rel="noopener">Register</a>
+      </li>
+      {% endif %}
+      </ul>
+    </div>
+    </div>
+  </nav>
+  </header>
+  {% block body %}{% endblock %}
+  <div aria-live="polite" aria-atomic="true" class="sticky-top">
+  <div id="notifications" class="toast-container top-0 start-0 p-3">
+  </div>
+  </div>
+  <div id="content" class="my-4 mx-5">
+  {% block content %}{% endblock %}
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+  crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js" crossorigin="anonymous"></script>
+  <script>
+  window.onresize = (event) =>{
+    hideDropdownOffcanvas();
+  }
+
+  function hideDropdownOffcanvas() {
+    var navbarDropdowns = [
+    'articlesDropdown',
+    'dataDropdown',
+    'datascienceDropdown',
+    ];
+
+    for (var i = 0; i < navbarDropdowns.length; i++) {
+    var dropdown = document.getElementById(navbarDropdowns[i]);
+    var dropdownElems = document.getElementById(navbarDropdowns[i] + 'Elements');
+
+    if (document.getElementsByClassName('navbar-toggler-icon')[0].offsetParent != null) {
+      dropdownElems.classList.add('d-none');
+      dropdown.classList.remove('dropdown-toggle');
+      dropdown.setAttribute('data-bs-toggle', '');
+    } else {
+      dropdownElems.classList.remove('d-none');
+      dropdown.classList.add('dropdown-toggle');
+      dropdown.setAttribute('data-bs-toggle', 'dropdown');
+    }
+    }
+  }
+
+  function autofillAvailableFields() {
+    var url = new URL(window.location.href);
+    url.searchParams.forEach(function(value, key) {document.getElementById(key).value = value;});
+  }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+
+</html>
