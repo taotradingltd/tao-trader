@@ -1,5 +1,0 @@
-@hourly     root    /usr/local/bin/python   /app/manage.py runjobs hourly   >> /var/log/cron.log 2>&1
-@daily      root    /usr/local/bin/python   /app/manage.py runjobs daily    >> /var/log/cron.log 2>&1
-@weekly     root    /usr/local/bin/python   /app/manage.py runjobs weekly   >> /var/log/cron.log 2>&1
-@monthly    root    /usr/local/bin/python   /app/manage.py runjobs monthly  >> /var/log/cron.log 2>&1
-# new line

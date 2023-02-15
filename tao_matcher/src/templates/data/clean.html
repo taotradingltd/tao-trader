@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-
-{% block content %}
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" id="submit" name="clean">Clean people</button>
-  <button type="submit" id="cancel" name="cancel" formnovalidate>Cancel</button>
-</form>
-{% endblock %}
