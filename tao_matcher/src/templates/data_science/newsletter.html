@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<form class="gfm-form">
+  <b>Download raw data:</b><br><br>
+  <button type="button" style="width: 25%; background-color: #FA7800" id="hedge" onclick="retrieveData('hedgeweek');">Hedgeweek</button>
+  <button type="button" style="width: 25%" id="all" onclick="retrieveData('all_campaigns');">All campaigns</button>
+  <button type="button" style="width: 25%; background-color: #8B0E04" id="pew" onclick="retrieveData('privateequitywire');">Private Equity Wire</button><br><br>
+  (Data refreshed at midnight daily)
+</form>
+
+<br><br>
+
+
+<div style="text-align: center">
+<h2><b>Daily newsletters</b></h2>
+<img src="/media/newsletter_performance/images/HW-newsletter.png" style="width: 40%"/>
+<img src="/media/newsletter_performance/images/PEW-newsletter.png" style="width: 40%"/>
+</div>
+
+<br><br>
+
+<div style="text-align: center">
+<h2><b>Marketing emails</b></h2>
+<img src="/media/newsletter_performance/images/HW-marketing.png" style="width: 40%"/>
+<img src="/media/newsletter_performance/images/PEW-marketing.png" style="width: 40%"/><br>
+<img src="/media/newsletter_performance/images/Plain-text-email.png" style="width: 40%"/><br>
+<img src="/media/newsletter_performance/images/Other.png" style="width: 40%"/>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function retrieveData(pub) {
+    let url ="/data_science/newsletter_data/" + pub + "/";
+    $.get(url, function(data)
+    {
+      location.replace(url);
+    });
+  }
+</script>
+{% endblock %}

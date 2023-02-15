@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ form.media }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block body %}
+<form method="post" class="gfm-form" id="myForm" enctype="multipart/form-data">
+  <table class="center">
+    {% csrf_token %}
+    {{ form.as_p }}
+  </table>
+  <button type="submit" id="submit">Submit</button>
+  <button type="submit" id="cancel" name="cancel" formnovalidate>Cancel</button>
+</form>
+{% endblock %}
+
+{% block content %}
+  <script>
+    $(document).ready(function() {
+      $('.js-example-basic-single').select2();
+    });
+  </script>
+{% endblock %}
