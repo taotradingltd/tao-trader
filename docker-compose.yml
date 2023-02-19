@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    container_name: "gfm-vision"
+    container_name: "tao-trader"
     build:
       context: "./gfm-vision"
       dockerfile: "Dockerfile"
