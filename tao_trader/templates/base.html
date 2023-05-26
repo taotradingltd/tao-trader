@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Portal{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'gfm_custom.css' %}">
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-dark bg-dark sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand mx-auto" href="/">Portal</a>
+            </div>
+        </nav>
+        <div class="container text-center mt-5 p-4 border border-2 border-secondary rounded-4">
+            {% block content %}{% endblock %}
+        </div>
+        {% block body_scripts %}{% endblock %}
+    </body>
+</html>

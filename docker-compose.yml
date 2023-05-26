@@ -1,0 +1,31 @@
+version: "3"
+services:
+  web:
+    container_name: "tao-trader"
+    build:
+      context: "./tao-trader"
+      dockerfile: "Dockerfile"
+    command: "python manage.py runserver 0.0.0.0:8888"
+    ports:
+      - "8888:8888"
+    volumes:
+      - "./tao-trader/src:/app"
+    environment:
+      DOCKER: 1
+    depends_on:
+      - "db"
+
+  db:
+    container_name: "tao-trader-db"
+    image: "mysql:8.0"
+    command: "--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci"
+    restart: "unless-stopped"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./docker/data/db:/var/lib/mysql"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_USER: django
+      MYSQL_PASSWORD: djangopw
+      MYSQL_DATABASE: tao

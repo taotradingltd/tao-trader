@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{# Load the tag library #}
+{% load django_bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% block extra_head %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% endblock %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{# Display a form #}
+{% block content %}
+<h2>{% if form_title %}{{form_title}}{% else %}Form{% endif %}</h2>
+<hr>
+<br>
+<p>{{ top_message }}</p>
+<form action="{{request.path}}" method="post" class="form text-start" {% if takes_files %}enctype="multipart/form-data{% endif %}">
+  {% csrf_token %}
+
+  {% bootstrap_form form %}
+
+  {% bootstrap_button button_type="submit" content="Submit" %}
+  <p>{{ bottom_message }}</p>
+</form>
+<br>
+{% endblock %}
